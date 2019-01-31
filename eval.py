@@ -184,7 +184,6 @@ def save_box(box_List,image,img_path):
         x2 = min(int(x2_0 + 0.25 * (x2_0 - x1_0)), image.shape[1] - 1)
         image_new=image[y1:y2,x1:x2]
 
-        # # 图像处理
         gray_2 = image_new[:,:,0]
         gradX = cv2.Sobel(gray_2, ddepth = cv2.CV_32F, dx = 1, dy = 0, ksize = -1)
         gradY = cv2.Sobel(gray_2, ddepth = cv2.CV_32F, dx = 0, dy = 1, ksize = -1)

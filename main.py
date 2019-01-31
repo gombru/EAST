@@ -16,6 +16,7 @@ from utils.init import *
 from utils.util import *
 from utils.save import *
 from utils.myzip import *
+import sys
 import torch.backends.cudnn as cudnn
 from eval import predict
 from hmean import compute_hmean
@@ -57,7 +58,7 @@ def train(train_loader, model, criterion, scheduler, optimizer, epoch):
         if i % cfg.print_freq == 0:
             print('EAST <==> TRAIN <==> Epoch: [{0}][{1}/{2}] Loss {loss.val:.4f} Avg Loss {loss.avg:.4f})\n'.format(epoch, i, len(train_loader), loss=losses))
 
-        save_loss_info(losses, epoch, i, train_loader)
+        save_loss_info(losses, epoch, i, train_loader, path=cfg.training_data_path)
 
 
 def main():
@@ -67,7 +68,8 @@ def main():
     warnings.simplefilter('ignore', np.RankWarning)
     # Prepare for dataset
     print('EAST <==> Prepare <==> DataLoader <==> Begin')
-    train_root_path = os.path.abspath(os.path.join('./dataset/', 'train'))
+    # train_root_path = os.path.abspath(os.path.join('./dataset/', 'train'))
+    train_root_path = cfg.dataroot
     train_img = os.path.join(train_root_path, 'img')
     train_gt  = os.path.join(train_root_path, 'gt')
 

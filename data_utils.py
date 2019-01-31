@@ -26,7 +26,7 @@ def get_images(root):
     files -- a list of img path
     name  -- a list of img name
     '''
-    assert os.path.isdir(root) == True, 'get_img get a wrong path:{} to imgs'.format(root)
+    # assert os.path.isdir(root) == True, 'get_img get a wrong path:{} to imgs'.format(root)
     
     files = []
     for ext in ['jpg', 'png', 'jpeg', 'JPG']: 
@@ -530,14 +530,12 @@ def sort_rectangle(poly):
     # First find the lowest point
     p_lowest = np.argmax(poly[:, 1])
     if np.count_nonzero(poly[:, 1] == poly[p_lowest, 1]) == 2:
-        # 底边平行于X轴, 那么p0为左上角
         p0_index = np.argmin(np.sum(poly, axis=1))
         p1_index = (p0_index + 1) % 4
         p2_index = (p0_index + 2) % 4
         p3_index = (p0_index + 3) % 4
         return poly[[p0_index, p1_index, p2_index, p3_index]], 0.
     else:
-        # 找到最低点右边的点
         p_lowest_right = (p_lowest - 1) % 4
         p_lowest_left = (p_lowest + 1) % 4
         angle = np.arctan(-(poly[p_lowest][1] - poly[p_lowest_right][1])/(poly[p_lowest][0] - poly[p_lowest_right][0]))
@@ -545,14 +543,12 @@ def sort_rectangle(poly):
         if angle <= 0:
             print(angle, poly[p_lowest], poly[p_lowest_right])
         if angle/np.pi * 180 > 45:
-            # 这个点为p2
             p2_index = p_lowest
             p1_index = (p2_index - 1) % 4
             p0_index = (p2_index - 2) % 4
             p3_index = (p2_index + 1) % 4
             return poly[[p0_index, p1_index, p2_index, p3_index]], -(np.pi/2 - angle)
         else:
-            # 这个点为p3
             p3_index = p_lowest
             p0_index = (p3_index + 1) % 4
             p1_index = (p3_index + 2) % 4
@@ -676,7 +672,6 @@ def generate_rbox(im_size, polys, tags):
 
         xy_in_poly = np.argwhere(poly_mask == (poly_idx + 1))
         # if geometry == 'RBOX':
-        # 对任意两个顶点的组合生成一个平行四边形
         fitted_parallelograms = []
         for i in range(4):
             p0 = poly[i]
@@ -691,13 +686,11 @@ def generate_rbox(im_size, polys, tags):
 
             #select shorter line
             if point_dist_to_line(p0, p1, p2) > point_dist_to_line(p0, p1, p3):
-                # 平行线经过p2
                 if edge[1] == 0:#verticle
                     edge_opposite = [1, 0, -p2[0]]
                 else:
                     edge_opposite = [edge[0], -1, p2[1] - edge[0] * p2[0]]
             else:
-                # 经过p3
                 if edge[1] == 0:
                     edge_opposite = [1, 0, -p3[0]]
                 else:
@@ -974,7 +967,7 @@ class custom_dset(data.Dataset):
             img_id.append(os.path.basename(self.txt_path_list[i]).strip('.txt'))
             img_id.append(self.img_name_list[i].strip('.jpg'))
             img_id.append(self.txt_name_list[i].strip('.txt'))
-            if (img_id[0] == img_id[1])&(img_id[2] == img_id[3])&(img_id[0] == img_id[2]):
+            if (img_id[0] == img_id[1].strip('gt_'))&(img_id[2] == img_id[3].strip('gt_'))&(img_id[0] == img_id[2]):
                 continue
             else:
                 print(img_id[0])

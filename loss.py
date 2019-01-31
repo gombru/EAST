@@ -2,7 +2,7 @@ import torch
 from torch.autograd import Variable
 
 
-### 此处默认真实值和预测值的格式均为 bs * W * H * channels
+### bs * W * H * channels
 import torch
 import torch.nn as nn
 
